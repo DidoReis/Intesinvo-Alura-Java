@@ -1,4 +1,6 @@
+import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -14,7 +16,7 @@ public class App {
     public static void main(String[] args) throws Exception {
         //criar uma conexão HTTP e buscar os tops 250 filme
         
-        String url ="https://alura-imdb-api.herokuapp.com/movies";
+        String url ="https://mocki.io/v1/9a7c1ca9-29b4-4eb3-8306-1adb9d159060";
         URI endereco = URI.create(url);
         var client = HttpClient.newHttpClient();
         var request = HttpRequest.newBuilder(endereco).GET().build();
@@ -29,14 +31,24 @@ public class App {
         
         
         //Exibir e manipular os dados.
-        for (Map<String,String> filme : listaDeFilmes) {
+         var geradora = new GeradorDeFiguras();
+         for (Map<String,String> filme : listaDeFilmes) {    
+            
+          String urlImage = filme.get("image");
+          String title = filme.get("title");
+
+           InputStream inputStream = new URL(urlImage).openStream();
+           String nameFile = title.replace(":", "-") + ".png";
+            
            
+           geradora.create(inputStream, nameFile); 
+
            System.out.println("\u001b[3m \u001b[37;2m \u001b[45mPosition Rank: \u001b[m" +  filme.get("rank")); 
            System.out.println("\u001b[3m \u001b[37;2m \u001b[44mTitle: \u001b[m"+  filme.get("title"));
            System.out.println("\u001b[3m \u001b[37;2m \u001b[41mIMDb Rating: \u001b[m" + filme.get("imDbRating"));
            System.out.println("\u001b[3m \u001b[37;2m \u001b[43mCrew: \u001b[m" +  filme.get("crew"));
            System.out.println("\u001b[3m \u001b[37;2m \u001b[42mImage link: \u001b[m" +  filme.get("image"));
-        
+           
 
          }
            
